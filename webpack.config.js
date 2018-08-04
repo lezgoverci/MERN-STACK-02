@@ -10,6 +10,7 @@ module.exports = {
     module : {
         rules : [
             {
+                test: /\.jsx?$/,
                 exclude: '/node_modules',
                 use :{
                     loader: 'babel-loader'
@@ -17,7 +18,7 @@ module.exports = {
             }
         ]
     },
-    plugin : [
+    plugins: [
         new HtmlWebpackPlugin({
             template: './static/index.html'
         })
