@@ -3,7 +3,7 @@
 const issueFields = {
     title : 'required',
     name : 'required',
-    date : 'required'
+    date : 'optional'
 }
 
 function validate(issue){

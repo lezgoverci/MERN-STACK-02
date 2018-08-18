@@ -7,6 +7,7 @@ const app = express();
 let db;
 
 app.use(express.static('static'));
+app.use(bodyParser.json());
 
 app.get('/api/issues', (req,res) =>{
     db.collection('issues').find().toArray()
@@ -21,8 +22,7 @@ app.get('/api/issues', (req,res) =>{
 
 app.post('/api/issues', (req,res) =>{
     const newissue = req.body;
-    console.log(newissue);
-    newissue.date = new Date();
+ 
     
     const err = Issue.validate(newissue);
     if(err){
@@ -30,9 +30,9 @@ app.post('/api/issues', (req,res) =>{
         return;
     }
 
-    db.collection('issues').insertOne(newissue).then(insertedId => {
-        db.collection('issues').find({_id:insertedId}).limit(1).next();
-        return;
+    db.collection('issues').insertOne(newissue).then(result => {
+        return db.collection('issues').find({_id:result.insertedId}).limit(1).next();
+        
     }).then(insertedIssue => {
         res.json(insertedIssue);
     }).catch(error => {
