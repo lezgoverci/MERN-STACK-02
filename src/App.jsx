@@ -112,13 +112,12 @@ class IssueAdd extends Component{
             {
                 name: form.name.value,
                 title: form.title.value,
-                date: form.date.value
+                date: new Date()
             }
         );
 
         form.name.value = "";
         form.title.value = "";
-        form.date.value = "";
 
 
     }
@@ -128,7 +127,6 @@ class IssueAdd extends Component{
             <form name="IssueAddForm" onSubmit={this.submitHandler}>
                 <input type="text" name="name"/>
                 <input type="text" name="title"/>
-                <input type="hidden" name="date"/>
                 <button>Submit</button>
             </form>
         )
