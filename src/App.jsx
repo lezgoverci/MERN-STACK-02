@@ -8,6 +8,7 @@ class IssueComponent extends Component{
     constructor(){
         super();
         this.state = {issues:[]}
+        this.createIssue = this.createIssue.bind(this);
     }
 
     componentDidMount(){
@@ -30,17 +31,40 @@ class IssueComponent extends Component{
                     alert("Failed to fetch issues" + error.message)
                 })
             }
-        }).catch(error => {
+        }).catch(err => {
             alert("Error fetching data from server", err);
         });
     }
+
+    createIssue(issue){
+        fetch('api/issues',{
+            method: 'POST',
+            headers: {'Content-type':'application/json'},
+            body: JSON.stringify(issue)
+        }).then(response =>{
+            if(response.ok){
+                response.json().then(addedIssue =>{
+                    addedIssue.date = new Date(addedIssue.date);
+                    const newIssues = this.state.issues.concat(addedIssue);
+                    this.setState({issues:newIssues});
+                })
+            }else{
+                response.json().then(error =>{
+                    alert("Failed to add issue: " + error.message);
+                });
+            }
+        }).catch(err =>{
+            alert("Failed in sending data to server" + err.message);
+        })
+    }
+
     render(){
         
         return (
             <div>
                 <IssueFilter/>
                 <IssueList issues={this.state.issues}/>
-                <IssueAdd/>
+                <IssueAdd createIssue={this.createIssue}/>
             </div>
         )
 
@@ -76,9 +100,37 @@ function IssueList(props){
     }
 
 class IssueAdd extends Component{
+    constructor(){
+        super();
+        this.submitHandler = this.submitHandler.bind(this);
+    }
+
+    submitHandler(e){
+        e.preventDefault();
+        const form = document.forms.IssueAddForm;
+        this.props.createIssue(
+            {
+                name: form.name.value,
+                title: form.title.value,
+                date: form.date.value
+            }
+        );
+
+        form.name.value = "";
+        form.title.value = "";
+        form.date.value = "";
+
+
+    }
+
     render(){
         return(
-            <h2>This is the add form</h2>
+            <form name="IssueAddForm" onSubmit={this.submitHandler}>
+                <input type="text" name="name"/>
+                <input type="text" name="title"/>
+                <input type="hidden" name="date"/>
+                <button>Submit</button>
+            </form>
         )
     }
 }

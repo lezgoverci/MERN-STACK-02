@@ -20,16 +20,17 @@ app.get('/api/issues', (req,res) =>{
 });
 
 app.post('/api/issues', (req,res) =>{
-    const issue = req.body;
-    issue.date = new Date();
+    const newissue = req.body;
+    console.log(newissue);
+    newissue.date = new Date();
     
-    const err = Issue.validate(issue);
+    const err = Issue.validate(newissue);
     if(err){
         res.status(422).json({message: `Error: ${err}`});
         return;
     }
 
-    db.collection('issues').insertOne(issue).then(insertedId => {
+    db.collection('issues').insertOne(newissue).then(insertedId => {
         db.collection('issues').find({_id:insertedId}).limit(1).next();
         return;
     }).then(insertedIssue => {
