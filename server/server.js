@@ -45,8 +45,8 @@ app.post('/api/issues', (req,res) =>{
 
 MongoClient.connect('mongodb://localhost:27017',{useNewUrlParser:true}).then(client => {
     db = client.db('mern');
-    app.listen(3000,()=>{
-        console.log('App started in port 3000')
+    app.listen(80,()=>{
+        console.log('App started in port 80')
     })
 }
 ).catch(err => {
